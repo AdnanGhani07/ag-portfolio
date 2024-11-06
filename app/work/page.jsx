@@ -27,7 +27,7 @@ const projects = [
 ]
 
 const Work = () => {
-  return <div>Work Page</div>;
+  return <div className="flex items-center justify-center mt-10">Work in Progress</div>;
 };
 
 export default Work;
