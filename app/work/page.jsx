@@ -61,6 +61,9 @@ const Work = () => {
             </SwiperSlide>
           ))}
         </Swiper>
+        <div className="text-center mt-8 text-cyan-400">
+          Swipe For More
+        </div>
       </div>
     </motion.div>
   );
