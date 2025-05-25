@@ -185,10 +185,15 @@ const Resume = () => {
                               </div>
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p className="capitalize">{skill.name}</p>
+                              <p className="capitalize text-primary">
+                                {skill.name}
+                              </p>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
+                        <div className="text-xl text-cyan-500 text-center">
+                          {skill.name}
+                        </div>
                       </li>
                     );
                   })}
