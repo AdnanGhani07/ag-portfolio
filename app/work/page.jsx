@@ -83,18 +83,7 @@ const Work = () => {
           ))}
         </Swiper>
         <div className="flex justify-center gap-10 mt-6">
-          <button
-            ref={prevRef}
-            className="text-cyan-400 hover:text-white text-xl font-semibold transition"
-          >
-            ← Prev
-          </button>
-          <button
-            ref={nextRef}
-            className="text-cyan-400 hover:text-white text-xl font-semibold transition"
-          >
-            Next →
-          </button>
+          <h2 className="text-2xl font-bold text-cyan-400">Swipe For More</h2>
         </div>
       </div>
     </motion.div>
