@@ -16,3 +16,19 @@
         @apply text-[20px] xl:text-[24px] leading-[1.1] font-semibold;
     }
 }
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #22d3ee; /* Tailwind's cyan-400 */
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.swiper-button-next {
+  right: 10px;
+}
+
+.swiper-button-prev {
+  left: 10px;
+}

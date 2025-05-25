@@ -15,11 +15,11 @@ const Stats = () => {
     },
     {
       num: 11,
-      text: "Technologies mastered",
+      text: "Tools Mastered",
     },
     {
       num: 0,
-      text: "Code commits", // Placeholder, to be updated
+      text: "Code Commits", // Placeholder, to be updated
     },
   ]);
 
@@ -31,7 +31,7 @@ const Stats = () => {
   
         setStats((prevStats) =>
           prevStats.map((item) =>
-            item.text === "Code commits"
+            item.text === "Code Commits"
               ? { ...item, num: data.totalCommits }
               : item
           )

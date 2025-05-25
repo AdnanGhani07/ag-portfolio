@@ -2,7 +2,8 @@
 
 import { FaHtml5, FaCss3, FaJs, FaReact, FaNode } from "react-icons/fa";
 import { SiTailwindcss, SiNextdotjs } from "react-icons/si";
-import { FaJava, FaPython, FaC } from "react-icons/fa";
+import { FaJava, FaPython } from "react-icons/fa";
+import { SiClerk } from "react-icons/si";
 
 //about
 const about = {
@@ -91,6 +92,14 @@ const skills = {
     {
       icon: <FaJava />,
       name: "Java",
+    },
+    {
+      icon: <FaPython />,
+      name: "Python",
+    },
+    {
+      icon: <SiClerk />,
+      name: "Clerk",
     },
   ],
 };
