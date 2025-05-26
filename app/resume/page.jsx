@@ -155,9 +155,8 @@ const Resume = () => {
                           <h3 className="text-lg max-w-[260px] min-h-[60px] text-center lg:text-left">
                             {item.degree}
                           </h3>
-                          <div className="flex items-center gap-3">
-                            {/*dot*/}
-                            <span className="w-[6px] h-[6px] rounded-full bg-cyan-500"></span>
+                          <div className="flex items-center gap-3 pt-5">
+                            <span className="w-[6px] h-[6px] rounded-full bg-cyan-500 "></span>
                             <p className="text-white/60">{item.institution}</p>
                           </div>
                         </li>
@@ -200,7 +199,6 @@ const Resume = () => {
                 </ul>
               </div>
             </TabsContent>
-            {/*education*/}
             <TabsContent
               value="about"
               className="w-full text-center xl:text-left"
