@@ -7,7 +7,6 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import Image from "next/image";
 import Link from "next/link";
 import projects from "@/lib/data/projects";
 import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
@@ -15,12 +14,29 @@ import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 const Work = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const [swiperInstance, setSwiperInstance] = useState(null);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsReady(true), 1500);
     return () => clearTimeout(timer);
   }, []);
+
+  // Attach refs after DOM is ready and when Swiper instance is present
+  useEffect(() => {
+    if (
+      swiperInstance &&
+      prevRef.current &&
+      nextRef.current &&
+      typeof window !== "undefined"
+    ) {
+      swiperInstance.params.navigation.prevEl = prevRef.current;
+      swiperInstance.params.navigation.nextEl = nextRef.current;
+      swiperInstance.navigation.destroy();
+      swiperInstance.navigation.init();
+      swiperInstance.navigation.update();
+    }
+  }, [swiperInstance, isReady]); // make sure this happens after ready
 
   if (!isReady) {
     return (
@@ -48,21 +64,12 @@ const Work = () => {
             modules={[Navigation, Pagination]}
             spaceBetween={40}
             slidesPerView={1}
-            navigation={{
-              prevEl: prevRef.current,
-              nextEl: nextRef.current,
-            }}
+            onSwiper={setSwiperInstance}
             pagination={{
               clickable: true,
               dynamicBullets: true,
-              bulletClass: "swiper-pagination-bullet",
-              bulletActiveClass: "swiper-pagination-bullet-active",
             }}
-            onBeforeInit={(swiper) => {
-              swiper.params.navigation.prevEl = prevRef.current;
-              swiper.params.navigation.nextEl = nextRef.current;
-            }}
-            className="pb-16" // Add padding bottom for pagination dots
+            className="pb-16"
           >
             {projects.map((project, index) => (
               <SwiperSlide key={index}>
@@ -73,7 +80,7 @@ const Work = () => {
                   className="bg-white/10 backdrop-blur-lg shadow-2xl rounded-xl p-8 
                              h-[500px] xl:h-[400px] 
                              flex flex-col xl:flex-row items-center gap-8
-                             overflow-hidden" // Fixed height with overflow control
+                             overflow-hidden"
                 >
                   {/* Project info section */}
                   <div className="w-full xl:w-1/2 h-full flex flex-col justify-center space-y-4">
@@ -124,10 +131,20 @@ const Work = () => {
             ))}
           </Swiper>
 
-          {/* Navigation arrows outside the Swiper, as you had previously */}
+          {/* Navigation arrows outside the Swiper */}
           <div className="flex justify-center gap-4 mt-4">
-            <button className="bg-cyan-400/30 text-cyan-100 px-3 py-2 rounded font-mono text-sm hover:bg-cyan-400/50 hover:underline transition" ref={prevRef}>Prev</button>
-            <button className="bg-cyan-400/30 text-cyan-100 px-3 py-2 rounded font-mono text-sm hover:bg-cyan-400/50 hover:underline transition" ref={nextRef}>Next</button>
+            <button
+              className="bg-cyan-400/30 text-cyan-100 px-3 py-2 rounded font-mono text-sm hover:bg-cyan-400/50 hover:underline transition"
+              ref={prevRef}
+            >
+              Prev
+            </button>
+            <button
+              className="bg-cyan-400/30 text-cyan-100 px-3 py-2 rounded font-mono text-sm hover:bg-cyan-400/50 hover:underline transition"
+              ref={nextRef}
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
