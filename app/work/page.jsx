@@ -3,24 +3,22 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import "swiper/css/pagination";
 import Image from "next/image";
-
-import projects from "@/lib/data/projects"; // Ensure you created this file
+import Link from "next/link";
+import projects from "@/lib/data/projects";
+import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 
 const Work = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsReady(true);
-    }, 1500); // Delay for animation sync
-
+    const timer = setTimeout(() => setIsReady(true), 1500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -37,53 +35,100 @@ const Work = () => {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="py-12"
+      className="py-12 bg-gradient-to-br from-[#10161d] via-[#132531] to-[#081a2a]"
     >
       <div className="container mx-auto w-full px-4">
-        <h2 className="text-4xl font-bold text-center mb-12  text-cyan-400">
+        <h2 className="text-4xl font-bold text-center mb-12 text-cyan-400">
           My Projects
         </h2>
-        <Swiper
-          modules={[Navigation]}
-          spaceBetween={40}
-          slidesPerView={1}
-          navigation={{
-            prevEl: prevRef.current,
-            nextEl: nextRef.current,
-          }}
-          onBeforeInit={(swiper) => {
-            swiper.params.navigation.prevEl = prevRef.current;
-            swiper.params.navigation.nextEl = nextRef.current;
-          }}
-        >
-          {projects.map((project, index) => (
-            <SwiperSlide key={index}>
-              <div className="flex flex-col xl:flex-row items-center gap-8">
-                <div className="w-full xl:w-1/2 space-y-4">
-                  <h2 className="text-2xl text-cyan-400">
-                    {project.num} — {project.category}
-                  </h2>
-                  <h3 className="text-3xl font-bold">{project.title}</h3>
-                  <p className="text-white/70">{project.description}</p>
-                  <p className="text-sm text-white/50 font-mono">
-                    Tech: {project.tech.join(", ")}
-                  </p>
-                </div>
-                <div className="w-full max-w-[600px] h-auto aspect-[3/2] bg-transparent rounded-xl flex items-center justify-center overflow-hidden">
-                  <Image
-                    src={project.image}
-                    width={600}
-                    height={400}
-                    alt={project.title}
-                    className="object-contain w-full h-full"
-                  />
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <div className="flex justify-center gap-10 mt-6">
-          <h2 className="text-2xl font-bold text-cyan-400">Swipe For More</h2>
+
+        {/* Fixed height container for consistent sizing */}
+        <div className="relative mb-16">
+          <Swiper
+            modules={[Navigation, Pagination]}
+            spaceBetween={40}
+            slidesPerView={1}
+            navigation={{
+              prevEl: prevRef.current,
+              nextEl: nextRef.current,
+            }}
+            pagination={{
+              clickable: true,
+              dynamicBullets: true,
+              bulletClass: "swiper-pagination-bullet",
+              bulletActiveClass: "swiper-pagination-bullet-active",
+            }}
+            onBeforeInit={(swiper) => {
+              swiper.params.navigation.prevEl = prevRef.current;
+              swiper.params.navigation.nextEl = nextRef.current;
+            }}
+            className="pb-16" // Add padding bottom for pagination dots
+          >
+            {projects.map((project, index) => (
+              <SwiperSlide key={index}>
+                <motion.div
+                  initial={{ opacity: 0, y: 40, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 0.1, duration: 0.6 }}
+                  className="bg-white/10 backdrop-blur-lg shadow-2xl rounded-xl p-8 
+                             h-[500px] xl:h-[400px] 
+                             flex flex-col xl:flex-row items-center gap-8
+                             overflow-hidden" // Fixed height with overflow control
+                >
+                  {/* Project info section */}
+                  <div className="w-full xl:w-1/2 h-full flex flex-col justify-center space-y-4">
+                    <h2 className="text-lg text-cyan-400 uppercase font-semibold tracking-wider">
+                      {project.num} — {project.category}
+                    </h2>
+                    <h3 className="text-2xl xl:text-3xl font-extrabold text-white line-clamp-2">
+                      {project.title}
+                    </h3>
+                    <p className="text-white/80 text-sm xl:text-base line-clamp-3 flex-grow">
+                      {project.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {project.tech.map((t) => (
+                        <span
+                          key={t}
+                          className="bg-cyan-400/10 text-cyan-300 px-2 py-1 rounded-full text-xs font-bold uppercase hover:bg-cyan-400/30 transition"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex gap-3 mt-auto">
+                      {project.git && (
+                        <Link
+                          href={project.git}
+                          target="_blank"
+                          rel="noopener"
+                          className="bg-cyan-400/30 text-cyan-100 px-3 py-2 rounded font-mono text-sm hover:bg-cyan-400/50 hover:underline transition"
+                        >
+                          <FaGithub />
+                        </Link>
+                      )}
+                      {project.demo && (
+                        <Link
+                          href={project.demo}
+                          target="_blank"
+                          rel="noopener"
+                          className="bg-cyan-400/30 text-cyan-300 px-3 py-2 rounded font-mono text-sm hover:bg-white/40 hover:underline transition"
+                        >
+                          <FaExternalLinkAlt />
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+
+          {/* Navigation arrows outside the Swiper, as you had previously */}
+          <div className="flex justify-center gap-4 mt-4">
+            <button className="bg-cyan-400/30 text-cyan-100 px-3 py-2 rounded font-mono text-sm hover:bg-cyan-400/50 hover:underline transition" ref={prevRef}>Prev</button>
+            <button className="bg-cyan-400/30 text-cyan-100 px-3 py-2 rounded font-mono text-sm hover:bg-cyan-400/50 hover:underline transition" ref={nextRef}>Next</button>
+          </div>
         </div>
       </div>
     </motion.div>

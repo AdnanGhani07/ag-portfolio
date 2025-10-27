@@ -1,15 +1,15 @@
 "use client";
 
-import { FaHtml5, FaCss3, FaJs, FaReact, FaNode } from "react-icons/fa";
+import { FaHtml5, FaCss3, FaJs, FaReact, FaNode, FaGraduationCap, FaCalendarAlt, FaStar } from "react-icons/fa";
 import { SiTailwindcss, SiNextdotjs } from "react-icons/si";
 import { FaJava, FaPython } from "react-icons/fa";
-import { SiClerk } from "react-icons/si";
+import { SiClerk, SiSpring, SiMongodb, SiPrisma, SiDrizzle } from "react-icons/si";
 
 //about
 const about = {
   title: "About me",
   description:
-    "Passionate about the art of coding, I have spent years honing my skills in various programming languages. With a talent for problem-solving, I thrive in collaborative environments where I can work with like-minded individuals to create innovative solutions. Whether I'm optimizing existing code, or exploring new technologies, I am always excited to take on new challenges and push the boundaries of what's possible in the world of coding.",
+    "Passionate about the art of coding and backed by years of hands-on experience, I am a software developer skilled in Java, JavaScript, and full-stack technologies. My expertise spans building scalable web applications using React.js, Next.js, and Spring Boot, as well as integrating seamless user experiences with robust backend logic.",
   info: [
     {
       fieldName: "Name",
@@ -58,7 +58,7 @@ const education = {
 };
 
 //skills
-const skills = {
+export const skills = {
   title: "My skills",
   skillList: [
     {
@@ -87,7 +87,7 @@ const skills = {
     },
     {
       icon: <SiNextdotjs />,
-      name: "Next JS",
+      name: "Next.js",
     },
     {
       icon: <FaJava />,
@@ -101,6 +101,22 @@ const skills = {
       icon: <SiClerk />,
       name: "Clerk",
     },
+    {
+      icon: <SiSpring />,
+      name: "Spring Boot",
+    },
+    {
+      icon: <SiMongodb />,
+      name: "MongoDB",
+    },
+    {
+      icon: <SiPrisma />,
+      name: "Prisma",
+    },
+    {
+      icon: <SiDrizzle />,
+      name: "Drizzle",
+    }
   ],
 };
 
@@ -119,111 +135,164 @@ import { motion } from "framer-motion";
 const Resume = () => {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{
-        opacity: 1,
-        transition: { delay: 2.4, duration: 0.4, ease: "easeInOut" },
-      }}
-      className="min-h-[80vh] flex items-center justify-center py-12 xl:py-0"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="min-h-screen py-12 bg-gradient-to-br from-[#0a0f1c] via-[#111827] to-[#0f172a]"
     >
-      <div className="container mx-auto">
-        <Tabs
-          defaultValue="education"
-          className="flex flex-col xl:flex-row gap-[60px]"
+      <div className="container mx-auto px-4">
+        {/* Header Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="text-center mb-12"
         >
-          <TabsList className="flex flex-col w-full max-w-[380px] mx-auto xl:mx-0 gap-6">
-            <TabsTrigger value="education">Education</TabsTrigger>
-            <TabsTrigger value="skills">Skills</TabsTrigger>
-            <TabsTrigger value="about">About me</TabsTrigger>
-          </TabsList>
+          <h1 className="text-5xl font-bold text-white mb-4">
+            My <span className="text-cyan-400">Resume</span>
+          </h1>
+          <p className="text-white/70 text-lg max-w-2xl mx-auto">
+            Explore my educational background, technical skills, and professional journey
+          </p>
+        </motion.div>
 
-          {/*content*/}
-          <div className="min-h-[70vh] w-full">
-            {/*education*/}
+        <Tabs defaultValue="education" className="flex flex-col xl:flex-row gap-8">
+          {/* Enhanced Tab Navigation */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
+            <TabsList className="flex flex-col w-full max-w-[300px] mx-auto xl:mx-0 gap-4 bg-white/5 backdrop-blur-lg p-6 rounded-2xl border border-white/10">
+              <TabsTrigger 
+                value="education" 
+                className="w-full justify-start gap-3 px-6 py-4 text-left data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300"
+              >
+                <FaGraduationCap className="text-xl" />
+                Education
+              </TabsTrigger>
+              <TabsTrigger 
+                value="skills" 
+                className="w-full justify-start gap-3 px-6 py-4 text-left data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300"
+              >
+                <FaStar className="text-xl" />
+                Skills
+              </TabsTrigger>
+              <TabsTrigger 
+                value="about" 
+                className="w-full justify-start gap-3 px-6 py-4 text-left data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300"
+              >
+                <FaCalendarAlt className="text-xl" />
+                About me
+              </TabsTrigger>
+            </TabsList>
+          </motion.div>
+
+          {/* Content Area */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+            className="flex-1"
+          >
+            {/* Education Tab */}
             <TabsContent value="education" className="w-full">
-              <div className="flex flex-col gap-[30px] text-center xl:text-left">
-                <h3 className="text-4xl font-bold">{education.title}</h3>
-                <ScrollArea className="h-[400px]">
-                  <ul>
-                    {education.items.map((item, index) => {
-                      return (
-                        <li
-                          key={index}
-                          className="bg-[#232329] h-[184px] py-6 px-10 rounded-xl flex flex-col justify-center items-center lg:items-start gap-1"
-                        >
-                          <span className="text-cyan-500">{item.duration}</span>
-                          <h3 className="text-lg max-w-[260px] min-h-[60px] text-center lg:text-left">
-                            {item.degree}
-                          </h3>
-                          <div className="flex items-center gap-3 pt-5">
-                            <span className="w-[6px] h-[6px] rounded-full bg-cyan-500 "></span>
-                            <p className="text-white/60">{item.institution}</p>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </ScrollArea>
-              </div>
-            </TabsContent>
-            {/*skills*/}
-            <TabsContent value="skills" className="w-full">
-              <div className="flex flex-col gap-[30px]">
-                <div className="flex flex-col gap-[30px] text-center xl:text-left">
-                  <h3 className="text-4xl font-bold">{skills.title}</h3>
+              <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
+                <h3 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
+                  <FaGraduationCap className="text-cyan-400" />
+                  {education.title}
+                </h3>
+                <div className="space-y-6">
+                  {education.items.map((item, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 * index, duration: 0.5 }}
+                      className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 backdrop-blur-sm rounded-xl p-6 border border-cyan-500/20 hover:border-cyan-400/40 transition-all duration-300"
+                    >
+                      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
+                        <span className="text-cyan-400 font-semibold text-lg">{item.duration}</span>
+                        <span className="text-white/60 text-sm">{item.institution}</span>
+                      </div>
+                      <h4 className="text-white text-xl font-bold">{item.degree}</h4>
+                    </motion.div>
+                  ))}
                 </div>
-                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 xl:gap-[30px]">
-                  {skills.skillList.map((skill, index) => {
-                    return (
-                      <li key={index}>
-                        <TooltipProvider delayDuration={100}>
-                          <Tooltip>
-                            <TooltipTrigger className="w-full h-[150px] bg-[#232329] rounded-xl flex justify-center items-center group">
-                              <div className="text-6xl group-hover:text-cyan-500 transition-all duration-300">
-                                {skill.icon}
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="capitalize text-primary">
-                                {skill.name}
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <div className="text-xl text-cyan-500 text-center">
-                          {skill.name}
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
               </div>
             </TabsContent>
-            <TabsContent
-              value="about"
-              className="w-full text-center xl:text-left"
-            >
-              <div className="flex flex-col gap-[30px]">
-                <h3 className="text-4xl font-bold">{about.title}</h3>
-                <p className="text-justify max-w-[600px] text-white/60 mx-auto xl:mx-0">
+
+            {/* Skills Tab */}
+            <TabsContent value="skills" className="w-full">
+              <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
+                <h3 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
+                  <FaStar className="text-cyan-400" />
+                  {skills.title}
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {skills.skillList.map((skill, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.05 * index, duration: 0.4 }}
+                      whileHover={{ scale: 1.05, y: -5 }}
+                      className="group"
+                    >
+                      <TooltipProvider delayDuration={100}>
+                        <Tooltip>
+                          <TooltipTrigger className="w-full h-32 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm rounded-xl flex flex-col justify-center items-center gap-3 border border-white/10 hover:border-cyan-400/50 transition-all duration-300">
+                            <div className="text-4xl text-white/80 group-hover:text-cyan-400 transition-all duration-300 group-hover:scale-110">
+                              {skill.icon}
+                            </div>
+                            <span className="text-xs text-white/60 group-hover:text-cyan-300 transition-colors text-center px-2">
+                              {skill.name}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="font-semibold">{skill.name}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* About Tab */}
+            <TabsContent value="about" className="w-full">
+              <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
+                <h3 className="text-3xl font-bold text-white mb-8">{about.title}</h3>
+                <motion.p 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2, duration: 0.6 }}
+                  className="text-white/80 text-lg leading-relaxed mb-8 max-w-4xl"
+                >
                   {about.description}
-                </p>
-                <ul className="grid grid-cols-1 xl:grid-cols-2 gap-y-6 max-w-[620px] mx-auto xl:mx-0">
-                  {about.info.map((item, index) => {
-                    return (
-                      <li
-                        key={index}
-                        className="flex items-center justify-center xl:justify-start gap-4"
-                      >
-                        <span className="text-white/60">{item.fieldName}</span>
-                        <span className="text-xl">{item.fieldValue}</span>
-                      </li>
-                    );
-                  })}
-                </ul>
+                </motion.p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {about.info.map((item, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 * index, duration: 0.5 }}
+                      className="bg-gradient-to-r from-white/5 to-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10"
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className="text-cyan-400 font-semibold min-w-[80px]">
+                          {item.fieldName}:
+                        </span>
+                        <span className="text-white text-lg">{item.fieldValue}</span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </TabsContent>
-          </div>
+          </motion.div>
         </Tabs>
       </div>
     </motion.div>

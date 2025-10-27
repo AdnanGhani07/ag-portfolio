@@ -50,7 +50,11 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <Stats />
+      <div className="w-full flex justify-start mt-12 ml-44">
+        <div className="stats-card max-w-4xl">
+          <Stats />
+        </div>
+      </div>
     </section>
   );
 };

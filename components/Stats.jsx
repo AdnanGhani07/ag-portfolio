@@ -2,24 +2,22 @@
 
 import CountUp from "react-countup";
 import { useEffect, useState } from "react";
+import projects from "../lib/data/projects"; // adjust path if needed
+import { skills } from "../app/resume/page"; // adjust path and export of skills
 
 const Stats = () => {
   const [stats, setStats] = useState([
     {
-      num: 19,
-      text: "Mini Projects",
+      num: projects.length,
+      text: "Projects",
     },
     {
-      num: 5,
-      text: "Major Projects",
-    },
-    {
-      num: 11,
+      num: skills.skillList.length,
       text: "Tools Mastered",
     },
     {
       num: 0,
-      text: "Code Commits", // Placeholder, to be updated
+      text: "Code Commits",
     },
   ]);
 
@@ -28,7 +26,7 @@ const Stats = () => {
       try {
         const res = await fetch("/api/github-commits");
         const data = await res.json();
-  
+
         setStats((prevStats) =>
           prevStats.map((item) =>
             item.text === "Code Commits"
@@ -40,10 +38,9 @@ const Stats = () => {
         console.error("Failed to fetch commit count", error);
       }
     }
-  
+
     fetchCommits();
-  }, []);  
-  
+  }, []);
 
   return (
     <section className="pt-4 pb-12 xl:pt-0 xl:pb-0">
