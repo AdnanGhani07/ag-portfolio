@@ -1,9 +1,26 @@
 "use client";
 
-import { FaHtml5, FaCss3, FaJs, FaReact, FaNode, FaGraduationCap, FaCalendarAlt, FaStar } from "react-icons/fa";
+import { useEffect, useState } from "react";
+
+import {
+  FaHtml5,
+  FaCss3,
+  FaJs,
+  FaReact,
+  FaNode,
+  FaGraduationCap,
+  FaCalendarAlt,
+  FaStar,
+} from "react-icons/fa";
 import { SiTailwindcss, SiNextdotjs } from "react-icons/si";
 import { FaJava, FaPython } from "react-icons/fa";
-import { SiClerk, SiSpring, SiMongodb, SiPrisma, SiDrizzle } from "react-icons/si";
+import {
+  SiClerk,
+  SiSpring,
+  SiMongodb,
+  SiPrisma,
+  SiDrizzle,
+} from "react-icons/si";
 
 //about
 const about = {
@@ -116,7 +133,7 @@ export const skills = {
     {
       icon: <SiDrizzle />,
       name: "Drizzle",
-    }
+    },
   ],
 };
 
@@ -133,6 +150,21 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion } from "framer-motion";
 
 const Resume = () => {
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsReady(true), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isReady) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="animate-pulse text-white/60 text-lg">Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -142,7 +174,7 @@ const Resume = () => {
     >
       <div className="container mx-auto px-4">
         {/* Header Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
@@ -152,11 +184,15 @@ const Resume = () => {
             My <span className="text-cyan-400">Resume</span>
           </h1>
           <p className="text-white/70 text-lg max-w-2xl mx-auto">
-            Explore my educational background, technical skills, and professional journey
+            Explore my educational background, technical skills, and
+            professional journey
           </p>
         </motion.div>
 
-        <Tabs defaultValue="education" className="flex flex-col xl:flex-row gap-8">
+        <Tabs
+          defaultValue="education"
+          className="flex flex-col xl:flex-row gap-8"
+        >
           {/* Enhanced Tab Navigation */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -164,22 +200,22 @@ const Resume = () => {
             transition={{ delay: 0.4, duration: 0.6 }}
           >
             <TabsList className="flex flex-col w-full max-w-[300px] mx-auto xl:mx-0 gap-4 bg-white/5 backdrop-blur-lg p-6 rounded-2xl border border-white/10">
-              <TabsTrigger 
-                value="education" 
+              <TabsTrigger
+                value="education"
                 className="w-full justify-start gap-3 px-6 py-4 text-left data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300"
               >
                 <FaGraduationCap className="text-xl" />
                 Education
               </TabsTrigger>
-              <TabsTrigger 
-                value="skills" 
+              <TabsTrigger
+                value="skills"
                 className="w-full justify-start gap-3 px-6 py-4 text-left data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300"
               >
                 <FaStar className="text-xl" />
                 Skills
               </TabsTrigger>
-              <TabsTrigger 
-                value="about" 
+              <TabsTrigger
+                value="about"
                 className="w-full justify-start gap-3 px-6 py-4 text-left data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300"
               >
                 <FaCalendarAlt className="text-xl" />
@@ -212,10 +248,16 @@ const Resume = () => {
                       className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 backdrop-blur-sm rounded-xl p-6 border border-cyan-500/20 hover:border-cyan-400/40 transition-all duration-300"
                     >
                       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
-                        <span className="text-cyan-400 font-semibold text-lg">{item.duration}</span>
-                        <span className="text-white/60 text-sm">{item.institution}</span>
+                        <span className="text-cyan-400 font-semibold text-lg">
+                          {item.duration}
+                        </span>
+                        <span className="text-white/60 text-sm">
+                          {item.institution}
+                        </span>
                       </div>
-                      <h4 className="text-white text-xl font-bold">{item.degree}</h4>
+                      <h4 className="text-white text-xl font-bold">
+                        {item.degree}
+                      </h4>
                     </motion.div>
                   ))}
                 </div>
@@ -263,8 +305,10 @@ const Resume = () => {
             {/* About Tab */}
             <TabsContent value="about" className="w-full">
               <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
-                <h3 className="text-3xl font-bold text-white mb-8">{about.title}</h3>
-                <motion.p 
+                <h3 className="text-3xl font-bold text-white mb-8">
+                  {about.title}
+                </h3>
+                <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2, duration: 0.6 }}
@@ -285,7 +329,9 @@ const Resume = () => {
                         <span className="text-cyan-400 font-semibold min-w-[80px]">
                           {item.fieldName}:
                         </span>
-                        <span className="text-white text-lg">{item.fieldValue}</span>
+                        <span className="text-white text-lg">
+                          {item.fieldValue}
+                        </span>
                       </div>
                     </motion.div>
                   ))}
