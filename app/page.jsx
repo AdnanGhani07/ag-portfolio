@@ -50,8 +50,8 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="w-full flex justify-start mt-12 ml-44">
-        <div className="stats-card max-w-4xl">
+      <div className="container mx-auto px-4 mt-12">
+        <div className="stats-card mx-auto max-w-4xl">
           <Stats />
         </div>
       </div>
