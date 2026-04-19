@@ -10,7 +10,7 @@ const Photo = () => {
         initial={{ opacity: 0 }}
         animate={{
           opacity: 1,
-          transition: { delay: 2, duration: 0.4, ease: "easeIn" },
+          transition: { delay: 0.2, duration: 0.6, ease: "easeIn" },
         }}
       >
         {/*Image*/}
@@ -18,23 +18,26 @@ const Photo = () => {
           initial={{ opacity: 0 }}
           animate={{
             opacity: 1,
-            transition: { delay: 2.4, duration: 0.4, ease: "easeInOut" },
+            transition: { delay: 0.4, duration: 0.8, ease: "easeInOut" },
           }}
-          className="w-[298px] h-[298px] xl:w-[498px] xl:h-[498px] mix-blend-lighten absolute"
+          className="w-[298px] h-[298px] xl:w-[498px] xl:h-[498px] mix-blend-lighten absolute inset-0 m-auto"
         >
-          <Image
-            src="/assets/photo.png"
-            priority
-            quality={100}
-            fill
-            alt=""
-            className="object-contain"
-          />
+            <div className="relative w-full h-full">
+              <Image
+                src="/assets/photo.png"
+                priority
+                quality={100}
+                fill
+                sizes="(max-width: 1200px) 298px, 498px"
+                alt=""
+                className="object-contain"
+              />
+            </div>
         </motion.div>
 
         {/*Circle*/}
         <motion.svg
-          className="w-[300] xl:w-[506px] h-[300px] xl:h-[506px]"
+          className="w-[300px] xl:w-[506px] h-[300px] xl:h-[506px] mx-auto"
           fill="transparent"
           viewBox="0 0 506 506"
           xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +50,7 @@ const Photo = () => {
             strokeWidth="4"
             strokeLinecap="round"
             strokeLinejoin="round"
-            intial={{strokeDasharray: "24 10 0 0"}}
+            initial={{strokeDasharray: "24 10 0 0"}}
             animate={{
               strokeDasharray: ["15 120 25 25", "16 25 92 72", "4 250 22 22"],
               rotate: [120, 360],
