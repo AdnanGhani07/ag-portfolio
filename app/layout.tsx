@@ -5,6 +5,9 @@ import "./globals.css";
 import Header from "@/components/Header";
 import PageTransition from "@/components/PageTransition";
 import Footer from "@/components/Footer";
+import ThemeController from "@/components/ThemeController";
+import AITerminalModal from "@/components/AITerminalModal";
+import EasterEggsProvider from "@/components/EasterEggsProvider";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -53,17 +56,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${jetbrainsMono.variable} ${spaceGrotesk.variable} antialiased bg-[#0a0f1c] text-white flex flex-col min-h-screen`}>
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-cyan-500 focus:text-black focus:px-3 focus:py-1 z-50 rounded"
-        >
-          Skip to content
-        </a>
-        <Header />
-        <PageTransition>
-          <main id="main" className="flex-grow">{children}</main>
-        </PageTransition>
-        <Footer />
+        <ThemeController>
+          <EasterEggsProvider>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-cyan-500 focus:text-black focus:px-3 focus:py-1 z-50 rounded"
+            >
+              Skip to content
+            </a>
+            <Header />
+            <PageTransition>
+              <main id="main" className="flex-grow">{children}</main>
+            </PageTransition>
+            <Footer />
+            <AITerminalModal />
+          </EasterEggsProvider>
+        </ThemeController>
       </body>
     </html>
   );
