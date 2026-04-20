@@ -107,7 +107,7 @@ const MatrixRain = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-[1] pointer-events-none opacity-30 mix-blend-screen"
+      className="fixed inset-0 z-[1] pointer-events-none opacity-30 mix-blend-screen matrix-rain-canvas"
       style={{
         // Ensure it doesn't block interactions and sits physically behind the content
       }}

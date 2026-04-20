@@ -87,9 +87,7 @@ export default function ThemeController({ children }: { children: React.ReactNod
   return (
     <ThemeContext.Provider value={{ isRaining, isNight, weatherCode, location }}>
       {isRaining && <MatrixRain />}
-      <div className={`theme-wrapper ${hasMounted ? 'mounted' : ''}`}>
-        {children}
-      </div>
+      {children}
     </ThemeContext.Provider>
   );
 }

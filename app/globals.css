@@ -14,9 +14,15 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 @layer base {
     body {
         @apply font-primary bg-[#0a0f1c] text-white leading-loose;
-        transition: background-color 1s ease, filter 1s ease;
     }
-    html.theme-night-cyberpunk body {
+    .theme-filter-wrapper {
+        transition: background-color 1s ease, filter 1s ease;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    html.theme-night-cyberpunk .theme-filter-wrapper,
+    html.theme-night-cyberpunk .matrix-rain-canvas {
         /* Deepen the background to pure black and rotate cyan neon to neon pink/magenta */
         background-color: #030005;
         filter: hue-rotate(130deg) saturate(1.2);

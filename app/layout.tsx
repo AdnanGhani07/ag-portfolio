@@ -57,20 +57,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="scroll-smooth">
       <body className={`${jetbrainsMono.variable} ${spaceGrotesk.variable} antialiased bg-[#0a0f1c] text-white flex flex-col min-h-screen`}>
         <ThemeController>
-          <EasterEggsProvider>
-            <a
-              href="#main"
-              className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-cyan-500 focus:text-black focus:px-3 focus:py-1 z-50 rounded"
-            >
-              Skip to content
-            </a>
-            <Header />
-            <PageTransition>
-              <main id="main" className="flex-grow">{children}</main>
-            </PageTransition>
-            <Footer />
-            <AITerminalModal />
-          </EasterEggsProvider>
+          <div className="theme-filter-wrapper">
+            <EasterEggsProvider>
+              <a
+                href="#main"
+                className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-cyan-500 focus:text-black focus:px-3 focus:py-1 z-50 rounded"
+              >
+                Skip to content
+              </a>
+              <Header />
+              <PageTransition>
+                <main id="main" className="flex-grow">
+                  {children}
+                </main>
+              </PageTransition>
+              <Footer />
+            </EasterEggsProvider>
+          </div>
+          <AITerminalModal />
         </ThemeController>
       </body>
     </html>
