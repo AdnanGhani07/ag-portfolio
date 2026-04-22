@@ -1,13 +1,18 @@
 import { NextResponse } from "next/server";
-import projects, {
-  projectsDescriptionsMap,
-  projectsTagsMap,
-  projectsMap,
-} from "@/lib/data/projects";
+import knowledgeBase from "@/lib/data/knowledgeBase";
+import { getGeminiTools } from "@/lib/data/tools";
+
+interface ConversationMessage {
+  role: "user" | "ai" | "system";
+  content: string;
+}
 
 export async function POST(req: Request) {
   try {
-    const { message } = await req.json();
+    const { message, history } = (await req.json()) as {
+      message: string;
+      history?: ConversationMessage[];
+    };
 
     if (!message) {
       return NextResponse.json(
@@ -25,75 +30,72 @@ export async function POST(req: Request) {
       );
     }
 
-    const rawResumeContext = `
-ADNAN GHANI
-agadnanrocks07@gmail.com | +91-9504708989 | LinkedIn | Github | Portfolio
+    // ── Build structured knowledge context ──────────────
+    const knowledgeContext = knowledgeBase
+      .map(
+        (chunk) =>
+          `[${chunk.category.toUpperCase()}] ${chunk.title}\n${chunk.content}`,
+      )
+      .join("\n\n---\n\n");
 
-SUMMARY
-Results-driven Full Stack Developer skilled in React.js, Next.js, and TypeScript. Experienced in building responsive, full-stack web applications with intuitive user interfaces. Eager to leverage technical expertise and problem-solving skills to deliver high-performance digital experiences.
+    // ── System prompt ──────────────────────────────────
+    const systemPrompt = `You are the AI Assistant of Adnan Ghani, a Full Stack Developer. You are embedded in his personal portfolio website.
 
-EXPERIENCE
-Software Intern - AariyaTech, Remote Dec 2025 - Present
-• Engineered an AI-Driven CV Optimization System using Next.js, TypeScript, and Google GenAI. Developed custom parsing logic to compute ATS scores and eliminate LLM data hallucinations, increasing data extraction accuracy by 15%.
-• Architected a Tiered Appointment Booking Flow by developing a stateful, multi-step scheduling sequence. Integrated frontend timezone handling with real-time backend slot validation, reducing booking conflicts by 20%.
-• Built and Streamlined Dynamic UI Interfaces utilizing React Hook Form, Tailwind CSS, and Radix UI. Resolved deep TypeScript bottlenecks and eliminated data inconsistencies, improving form submission reliability across 5+ complex data-entry workflows.
+ROLE & BEHAVIOR:
+- You help recruiters, hiring managers, and visitors learn about Adnan's skills, experience, projects, and background.
+- Be conversational, professional, and concise. Use a friendly but knowledgeable tone.
+- Always respond in complete sentences, at least 2 sentences long.
+- ONLY answer questions based on the knowledge base below. If you don't have information about something, say so politely.
+- When listing projects or skills, format them clearly.
+- NEVER use Markdown formatting in your responses. No bold (**), no italic (*), no headers (#), no bullet points (- or *). Use plain text only. For lists, use simple numbered items or commas.
 
-Summer Intern - Tata Steel Ltd., Jharkhand Aug 2023 - Oct 2023
-• Developed a fraudulent image detection system by implementing and evaluating Custom FaceNet and ResNet-50 Convolutional Neural Networks.
-• Optimized model training pipelines across real and fake face datasets using Adam optimization, learning rate scheduling, and binary cross-entropy loss.
-• Interpreted model predictions by utilizing Saliency Maps and GradCAM++ to visualize and analyze the neural network’s critical decision-making regions.
+SITE CONTROL CAPABILITIES:
+You have tools that can control the portfolio website. Use them when appropriate:
+- navigate_to_section: When the user wants to view a specific page (home, resume, work, contact).
+- toggle_theme: When the user wants to switch between night mode and day mode.
+- toggle_matrix: When the user wants to see or hide the Matrix digital rain effect.
+- launch_snake: When the user asks to play a game or see easter eggs.
+- download_resume: When the user wants Adnan's resume/CV.
+- show_projects_by_tech: When the user asks about projects using a specific technology.
 
-PROJECTS
-CinePulse - A Movie, TV Show & Anime Guide May 2025 - Jul 2025
-• Developed a responsive, full-stack entertainment database to streamline the discovery of movies, TV shows, and anime.
-• Engineered the user-facing frontend and server-side API routing, reducing data retrieval time by 20% through optimized component rendering and state management.
-• Designed an intuitive UI/UX featuring multi-parameter search and filtering, improving content discoverability across 3 distinct entertainment categories.
+When using a tool, ALSO include a short conversational message explaining what you're doing.
 
-Woven Words - A Full-Stack Literary Blog May 2025 - Jul 2025
-• Developed a full-stack literary blog dedicated to sharing original poems, prose, and personal reflections.
-• Engineered a responsive reading interface using Next.js, implementing server-side rendering to achieve fast page load times for seamless content delivery.
-• Built an interactive user engagement system that supports seamless commenting and sharing functionalities, fostering community interaction across multiple post categories.
+KNOWLEDGE BASE:
+${knowledgeContext}`;
 
-SleepTracker - A Personal Sleep Analytics Web App Apr 2025 - Jun 2025
-• Built a server-side rendered web application utilizing Next.js to monitor and analyze personal sleep habits, supporting continuous daily data logging.
-• Implemented seamless user authentication using Clerk, ensuring secure session management and strict data privacy for individual user profiles.
-• Developed interactive data visualization features mapping up to 30+ days of sleep duration and quality metrics, enabling users to easily identify long-term health trends.
+    // ── Build conversation history for Gemini ──────────
+    const conversationContents: Array<{
+      role: string;
+      parts: Array<{ text: string }>;
+    }> = [];
 
-SKILLS SUMMARY
-Languages: Java, JavaScript, TypeScript, HTML, CSS, SQL
-Frameworks & Libraries: React.js, Next.js, Node.js, Spring Boot
-Databases: MongoDB, Neon, Supabase, Firebase
-Tools & Technologies: Git, Postman, Docker, RESTful APIs, Clerk, Power BI
+    // Add conversation history (last 10 messages, excluding system)
+    if (history && history.length > 0) {
+      const relevantHistory = history
+        .filter((msg) => msg.role === "user" || msg.role === "ai")
+        .slice(-10);
 
-EDUCATION
-Vellore Institute of Technology › September 2021 - May 2025
-Bachelor of Technology in Electronics and Computer Engineering (CGPA: 9.15) Chennai, India
-Tarapore School Agrico A May 2018 - Jun 2020
-Indian School Certificate (ISC board : 80.75%) Jamshedpur, India
-`;
+      for (const msg of relevantHistory) {
+        conversationContents.push({
+          role: msg.role === "user" ? "user" : "model",
+          parts: [{ text: msg.content }],
+        });
+      }
+    }
 
-    const projectContext = projects
-      .map((p) => {
-        return `Project: ${projectsMap[p]}\nDescription: ${projectsDescriptionsMap[p]}\nStack: ${projectsTagsMap[p]?.join(", ") || "N/A"}`;
-      })
-      .join("\n\n");
+    // Add the current user message
+    conversationContents.push({
+      role: "user",
+      parts: [{ text: message }],
+    });
 
-    const systemPrompt = `[SYSTEM INSTRUCTION: You are an AI assistant of Adnan Ghani, a highly skilled Full Stack Developer. Always respond in complete sentences. Your role is exclusively to help recruiters learn about Adnan's capability, tech stack, and portfolio. Be conversational, witty and professional. Ensure your response is at least 2 sentences long.
-
-Here is Adnan's Resume / Base Context:
-${rawResumeContext}
-
-Here is Adnan's Project Portfolio Data:
-${projectContext}
-]\n\nUser: `;
-
+    // ── Gemini API request ─────────────────────────────
     const requestBody = {
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: systemPrompt + message }],
-        },
-      ],
+      system_instruction: {
+        parts: [{ text: systemPrompt }],
+      },
+      contents: conversationContents,
+      tools: getGeminiTools(),
     };
 
     let response;
@@ -113,7 +115,6 @@ ${projectContext}
       );
 
       if (response.status === 429 || response.status === 503) {
-        // High demand or rate limit - wait and retry
         retries++;
         if (retries <= maxRetries) {
           await new Promise((r) => setTimeout(r, 1000 * retries));
@@ -123,12 +124,11 @@ ${projectContext}
       break;
     }
 
-    if (!response) throw new Error("Cloud not reach Gemini API");
+    if (!response) throw new Error("Could not reach Gemini API");
 
     const data = await response.json();
 
     if (!response.ok) {
-      // If it's still high demand after retries, return a friendlier message
       if (
         response.status === 429 ||
         response.status === 503 ||
@@ -139,14 +139,50 @@ ${projectContext}
             "I'm currently receiving a lot of messages! Please give me a second to catch my breath and try asking again. 😅",
         });
       }
+      console.error("Gemini API Error:", JSON.stringify(data.error));
       throw new Error(data.error?.message || "Failed to fetch from Gemini API");
     }
 
-    const aiMessage =
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "No response received.";
+    // ── Parse response: text or function call ──────────
+    const candidate = data.candidates?.[0];
+    const parts = candidate?.content?.parts || [];
 
-    return NextResponse.json({ reply: aiMessage });
+    let replyText = "";
+    let action = null;
+
+    for (const part of parts) {
+      if (part.text) {
+        replyText += part.text;
+      }
+      if (part.functionCall) {
+        action = {
+          tool: part.functionCall.name,
+          args: part.functionCall.args || {},
+        };
+      }
+    }
+
+    // If we only got a function call with no text, add a default message
+    if (action && !replyText.trim()) {
+      const toolMessages: Record<string, string> = {
+        navigate_to_section: `Taking you to the ${action.args.section || "requested"} section now!`,
+        toggle_theme: `Switching to ${action.args.theme === "night" ? "cyberpunk night" : "default day"} mode!`,
+        toggle_matrix: action.args.enabled
+          ? "Activating the Matrix digital rain effect!"
+          : "Deactivating the Matrix effect.",
+        launch_snake: "Launching the Snake game! Have fun! 🐍",
+        download_resume: "Here comes Adnan's resume — downloading now!",
+        show_projects_by_tech: `Let me find projects using ${action.args.tech || "that technology"}...`,
+      };
+      replyText = toolMessages[action.tool] || "Executing your request now!";
+    }
+
+    return NextResponse.json({
+      reply:
+        replyText ||
+        "I'm not sure how to respond to that. Try asking about Adnan's skills, projects, or experience!",
+      ...(action && { action }),
+    });
   } catch (error: any) {
     console.error("AI Chat Error:", error.message);
     return NextResponse.json(

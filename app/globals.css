@@ -23,8 +23,13 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     }
     html.theme-night-cyberpunk .theme-filter-wrapper,
     html.theme-night-cyberpunk .matrix-rain-canvas {
-        /* Deepen the background to pure black and rotate cyan neon to neon pink/magenta */
         background-color: #030005;
+    }
+    html.theme-night-cyberpunk .theme-filter-wrapper,
+    html.theme-night-cyberpunk .matrix-rain-canvas,
+    html.theme-night-cyberpunk body > [role="dialog"],
+    html.theme-night-cyberpunk body > [data-aria-hidden] {
+        /* Rotate cyan neon to neon pink/magenta */
         filter: hue-rotate(130deg) saturate(1.2);
     }
     .h1{

@@ -1,33 +1,41 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { flushSync } from "react-dom";
 import { X, Terminal as TerminalIcon, Send } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 import SnakeGame from "./SnakeGame";
-import MatrixRain from "./MatrixRain";
+import { useThemeStatus } from "./ThemeController";
 
 interface ChatLog {
   role: "user" | "ai" | "system";
   content: string;
 }
 
+interface ToolAction {
+  tool: string;
+  args: Record<string, any>;
+}
+
 export default function AITerminalModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [logs, setLogs] = useState<ChatLog[]>([
-    { role: "system", content: "AI Assistant [ADNAN_GHANI_v1.0] initialized." },
+    { role: "system", content: "AI Assistant [AG_V2.0] initialized." },
     {
       role: "ai",
       content:
-        "Hello. I am Adnan's AI Assistant. Ask me anything about his skills or experience.",
+        "Hello! I'm Adnan's AI Assistant. Ask me anything about his skills, projects, or experience — or I can navigate the site for you!",
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [showSnake, setShowSnake] = useState(false);
-  const [showMatrix, setShowMatrix] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+  const { isRaining, setManualNight, setManualRain } = useThemeStatus();
 
   // Toggle modal on Backquote / CMD+K
   useEffect(() => {
@@ -36,7 +44,7 @@ export default function AITerminalModal() {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setIsOpen((prev) => !prev);
-      } else if (e.key === "\`" && !isOpen) {
+      } else if (e.key === "`" && !isOpen) {
         e.preventDefault();
         setIsOpen(true);
       }
@@ -59,6 +67,105 @@ export default function AITerminalModal() {
     }
   }, [logs, isLoading]);
 
+  // ── Tool action executor ─────────────────────────────
+  const executeAction = useCallback(
+    (action: ToolAction) => {
+      const { tool, args } = action;
+
+      switch (tool) {
+        case "navigate_to_section": {
+          const section = args.section as string;
+          const routes: Record<string, string> = {
+            home: "/",
+            resume: "/resume",
+            work: "/work",
+            contact: "/contact",
+          };
+          if (routes[section]) {
+            setLogs((prev) => [
+              ...prev,
+              {
+                role: "system",
+                content: `🎯 Navigating to ${section.charAt(0).toUpperCase() + section.slice(1)}...`,
+              },
+            ]);
+            router.push(routes[section]);
+          }
+          break;
+        }
+
+        case "toggle_theme": {
+          const theme = args.theme as string;
+          const isNight = theme === "night";
+          setManualNight(isNight);
+          setLogs((prev) => [
+            ...prev,
+            {
+              role: "system",
+              content: isNight
+                ? "🌙 Night mode activated."
+                : "☀️ Day mode activated.",
+            },
+          ]);
+          break;
+        }
+
+        case "toggle_matrix": {
+          const enabled = !!args.enabled;
+          setManualRain(enabled);
+          setLogs((prev) => [
+            ...prev,
+            {
+              role: "system",
+              content: enabled
+                ? "💊 Matrix rain activated. Welcome to the real world."
+                : "Matrix rain deactivated.",
+            },
+          ]);
+          break;
+        }
+
+        case "launch_snake": {
+          setLogs((prev) => [
+            ...prev,
+            {
+              role: "system",
+              content: "🐍 SNAKE_PROTOCOL_v4.2 launching...",
+            },
+          ]);
+          setTimeout(() => setShowSnake(true), 500);
+          break;
+        }
+
+        case "download_resume": {
+          setLogs((prev) => [
+            ...prev,
+            {
+              role: "system",
+              content: "📄 Initiating resume download...",
+            },
+          ]);
+          setTimeout(() => {
+            const link = document.createElement("a");
+            link.href = "/AG-Resumex.pdf";
+            link.download = "Adnan_Ghani_Resume.pdf";
+            link.click();
+          }, 300);
+          break;
+        }
+
+        case "show_projects_by_tech": {
+          // This is handled entirely by the AI's text response (option B)
+          break;
+        }
+
+        default:
+          break;
+      }
+    },
+    [router, setManualNight, setManualRain],
+  );
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
@@ -67,7 +174,7 @@ export default function AITerminalModal() {
     setInput("");
     setLogs((prev) => [...prev, { role: "user", content: userMessage }]);
 
-    // Secret Commands
+    // Secret Commands (keep legacy commands working)
     const cmd = userMessage.toLowerCase();
 
     if (cmd === "snake") {
@@ -84,7 +191,7 @@ export default function AITerminalModal() {
         ...prev,
         { role: "system", content: "Hacking into the mainframe..." },
       ]);
-      setShowMatrix(!showMatrix);
+      setManualRain(!isRaining);
       return;
     }
 
@@ -114,34 +221,54 @@ export default function AITerminalModal() {
     setIsLoading(true);
 
     try {
+      // Send conversation history (last 10 messages, excluding system)
+      const historyForApi = logs
+        .filter((log) => log.role === "user" || log.role === "ai")
+        .slice(-10);
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({
+          message: userMessage,
+          history: historyForApi,
+        }),
       });
       const data = await res.json();
 
-      if (res.ok) {
-        setLogs((prev) => [...prev, { role: "ai", content: data.reply }]);
-      } else {
+      flushSync(() => {
+        if (res.ok) {
+          // Add AI reply
+          if (data.reply) {
+            setLogs((prev) => [...prev, { role: "ai", content: data.reply }]);
+          }
+
+          // Execute tool action if present
+          if (data.action) {
+            executeAction(data.action);
+          }
+        } else {
+          setLogs((prev) => [
+            ...prev,
+            {
+              role: "system",
+              content: `ERROR: ${data.error || "Connection lost"}`,
+            },
+          ]);
+        }
+        setIsLoading(false);
+      });
+    } catch (err) {
+      flushSync(() => {
         setLogs((prev) => [
           ...prev,
           {
             role: "system",
-            content: `ERROR: ${data.error || "Connection lost"}`,
+            content: "CRITICAL FAILURE: Unable to reach AI core.",
           },
         ]);
-      }
-    } catch (err) {
-      setLogs((prev) => [
-        ...prev,
-        {
-          role: "system",
-          content: "CRITICAL FAILURE: Unable to reach AI core.",
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
+        setIsLoading(false);
+      });
     }
   };
 
@@ -236,13 +363,16 @@ export default function AITerminalModal() {
               )}
             </div>
 
-            {/* Suggested Questions: Holographic Chips */}
+            {/* Suggested Actions: Tool-Based Chips (shown only before first message) */}
+            {logs.length <= 2 && (
             <div className="px-5 pb-3 pt-2 flex flex-wrap gap-2 text-[11px] font-tech font-bold uppercase tracking-wider">
               {[
-                "Tech Stack",
-                "Portfolio Projects",
-                "Work Experience",
-                "Contact Info",
+                "Show me Adnan's resume",
+                "Turn on the night mode",
+                "Launch the Matrix",
+                "Play a game",
+                "React projects?",
+                "Go to Work section",
               ].map((q, idx) => (
                 <button
                   key={idx}
@@ -253,6 +383,7 @@ export default function AITerminalModal() {
                 </button>
               ))}
             </div>
+            )}
 
             {/* Input Area: Tactical Trigger */}
             <form
@@ -290,8 +421,6 @@ export default function AITerminalModal() {
       <AnimatePresence>
         {showSnake && <SnakeGame onClose={() => setShowSnake(false)} />}
       </AnimatePresence>
-
-      {showMatrix && <MatrixRain />}
     </>
   );
 }
