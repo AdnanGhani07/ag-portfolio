@@ -9,6 +9,7 @@ import ThemeController from "@/components/ThemeController";
 import AITerminalModal from "@/components/AITerminalModal";
 import EasterEggsProvider from "@/components/EasterEggsProvider";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -78,6 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AITerminalModal />
         </ThemeController>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
