@@ -147,7 +147,7 @@ export default function AITerminalModal() {
           ]);
           setTimeout(() => {
             const link = document.createElement("a");
-            link.href = "/AG-Resumex.pdf";
+            link.href = "/AG_resumel.pdf";
             link.download = "Adnan_Ghani_Resume.pdf";
             link.click();
           }, 300);

@@ -13,16 +13,16 @@ const knowledgeBase: KnowledgeChunk[] = [
     category: "bio",
     title: "Professional Summary",
     content:
-      "Adnan Ghani is a results-driven Full Stack Developer skilled in React.js, Next.js, and TypeScript. He has experience building responsive, full-stack web applications with intuitive user interfaces. He is eager to leverage technical expertise and problem-solving skills to deliver high-performance digital experiences.",
+      "Adnan Ghani is a results-driven Full Stack Developer skilled in React.js, Next.js, and TypeScript. Experienced in building responsive, full-stack web applications with intuitive user interfaces. Eager to leverage technical expertise and problem-solving skills to deliver high-performance digital experiences.",
     tags: ["who", "about", "summary", "introduction", "background", "bio"],
   },
   {
     id: "bio-location",
     category: "bio",
-    title: "Location & Availability",
+    title: "Location & Current Role",
     content:
-      "Adnan is based in India. He graduated from VIT Chennai in May 2025 with a B.Tech in Electronics and Computer Engineering. He is currently working as a Software Intern at AariyaTech (Remote) and is open to full-time opportunities.",
-    tags: ["location", "city", "country", "where", "available", "availability", "remote", "relocate"],
+      "Adnan is based in India. He graduated from VIT Chennai in May 2025 with a B.Tech in Electronics and Computer Engineering (CGPA: 9.15). He is currently working as a Full Stack Developer I at AariyaTech (Remote).",
+    tags: ["location", "city", "country", "where", "available", "availability", "remote", "current", "job"],
   },
 
   // ── Skills ───────────────────────────────────────────
@@ -31,58 +31,66 @@ const knowledgeBase: KnowledgeChunk[] = [
     category: "skills",
     title: "Programming Languages",
     content:
-      "Adnan is proficient in: Java, JavaScript, TypeScript, HTML, CSS, and SQL.",
-    tags: ["languages", "programming", "code", "java", "javascript", "typescript", "html", "css", "sql"],
+      "Adnan is proficient in: Java, JavaScript, TypeScript, Python, HTML, CSS, and SQL.",
+    tags: ["languages", "programming", "code", "java", "javascript", "typescript", "python", "html", "css", "sql"],
   },
   {
     id: "skills-frameworks",
     category: "skills",
     title: "Frameworks & Libraries",
     content:
-      "Adnan works with: React.js, Next.js, Node.js, Spring Boot, Tailwind CSS, Framer Motion, Radix UI, and React Hook Form.",
-    tags: ["frameworks", "libraries", "react", "nextjs", "next.js", "node", "spring", "tailwind", "framer", "radix"],
+      "Adnan works with: React.js, Next.js, Node.js, Spring Boot, Google ADK, Tailwind CSS, Framer Motion, Radix UI, and React Hook Form.",
+    tags: ["frameworks", "libraries", "react", "nextjs", "next.js", "node", "spring", "google adk", "adk", "tailwind", "framer", "radix"],
   },
   {
     id: "skills-databases",
     category: "skills",
     title: "Databases",
     content:
-      "Adnan has experience with: MongoDB, Neon (PostgreSQL), Supabase, and Firebase.",
+      "Adnan has experience with: MongoDB, Neon, Supabase, and Firebase.",
     tags: ["database", "databases", "db", "mongodb", "neon", "supabase", "firebase", "postgresql", "sql"],
+  },
+  {
+    id: "skills-cloud-devops",
+    category: "skills",
+    title: "Cloud & DevOps",
+    content:
+      "Adnan has experience with: Google Cloud Run, Firebase, GitHub Actions, and Docker.",
+    tags: ["cloud", "devops", "google cloud run", "gcp", "docker", "github actions", "ci/cd", "firebase"],
   },
   {
     id: "skills-tools",
     category: "skills",
     title: "Tools & Technologies",
     content:
-      "Adnan uses: Git, Postman, Docker, RESTful APIs, Clerk (authentication), Power BI, and Vercel for deployment.",
-    tags: ["tools", "technologies", "git", "docker", "postman", "api", "rest", "clerk", "vercel", "deployment"],
+      "Adnan uses: Git, Postman, RESTful APIs, Clerk (authentication), Power BI, and Stripe for payments.",
+    tags: ["tools", "technologies", "git", "postman", "api", "rest", "clerk", "power bi", "stripe"],
   },
   {
     id: "skills-ai",
     category: "skills",
-    title: "AI & Machine Learning",
+    title: "AI & Agentic Workflows",
     content:
-      "Adnan has experience with Google GenAI (Gemini), building AI-driven CV optimization systems, implementing CNNs (FaceNet, ResNet-50) for image detection, and using techniques like Saliency Maps and GradCAM++ for model interpretability.",
-    tags: ["ai", "machine learning", "ml", "deep learning", "neural", "cnn", "gemini", "genai", "artificial intelligence"],
+      "Adnan has extensive experience with Google GenAI (Gemini), Google ADK (Agent Development Kit), building production AI agent platforms on Cloud Run, AI-driven CV optimization systems, and CNNs (FaceNet, ResNet-50) with interpretability methods (Saliency Maps, GradCAM++).",
+    tags: ["ai", "agents", "agentic", "adk", "gemini", "genai", "machine learning", "ml", "deep learning", "cnn"],
   },
 
   // ── Experience ───────────────────────────────────────
   {
-    id: "exp-aariyatech",
+    id: "exp-aariyatech-lead",
+    category: "experience",
+    title: "Full Stack Developer I at AariyaTech",
+    content:
+      "Full Stack Developer I at AariyaTech (Remote), Mar 2026 - Present.\n• Spearheaded a 6-member engineering team (4 interns, 2 developers) to build and deploy production-ready AI agents using Python and Google ADK. Orchestrated deployment on Google Cloud Run and integrated agentic workflows into a Next.js Web App (JSO), establishing a scalable AI platform.\n• Implemented an End-to-End Stripe Subscription Architecture integrating custom checkout sessions with real-time backend state validation. Engineered secure webhook handlers for instant user access provisioning upon successful payment, ensuring automated fulfillment accuracy.\n• Engineered a Centralized License Management Dashboard leveraging Next.js, TypeScript, and optimized server-side rendering. Built secure workflows for automated key generation, real-time validation tracking, and one-click access revocation, decreasing provisioning-related support inquiries by 30%.",
+    tags: ["aariyatech", "lead", "full stack", "developer", "experience", "job", "current", "google adk", "ai agents", "stripe", "cloud run"],
+  },
+  {
+    id: "exp-aariyatech-intern",
     category: "experience",
     title: "Software Intern at AariyaTech",
     content:
-      "Software Intern at AariyaTech (Remote), Dec 2025 - Present.\n• Engineered an AI-Driven CV Optimization System using Next.js, TypeScript, and Google GenAI. Developed custom parsing logic to compute ATS scores and eliminate LLM data hallucinations, increasing data extraction accuracy by 15%.\n• Architected a Tiered Appointment Booking Flow by developing a stateful, multi-step scheduling sequence. Integrated frontend timezone handling with real-time backend slot validation, reducing booking conflicts by 20%.\n• Built and Streamlined Dynamic UI Interfaces utilizing React Hook Form, Tailwind CSS, and Radix UI. Resolved deep TypeScript bottlenecks and eliminated data inconsistencies, improving form submission reliability across 5+ complex data-entry workflows.",
-    tags: ["aariyatech", "intern", "internship", "work", "experience", "job", "current", "cv", "ats", "booking", "remote"],
-  },
-  {
-    id: "exp-tatasteel",
-    category: "experience",
-    title: "Summer Intern at Tata Steel",
-    content:
-      "Summer Intern at Tata Steel Ltd., Jharkhand, Aug 2023 - Oct 2023.\n• Developed a fraudulent image detection system by implementing and evaluating Custom FaceNet and ResNet-50 Convolutional Neural Networks.\n• Optimized model training pipelines across real and fake face datasets using Adam optimization, learning rate scheduling, and binary cross-entropy loss.\n• Interpreted model predictions by utilizing Saliency Maps and GradCAM++ to visualize and analyze the neural network's critical decision-making regions.",
-    tags: ["tata", "steel", "intern", "internship", "summer", "experience", "job", "cnn", "face", "detection", "ml", "machine learning"],
+      "Software Intern at AariyaTech (Remote), Dec 2025 - Mar 2026.\n• Engineered an AI-Driven CV Optimization System using Next.js, TypeScript, and Google GenAI. Developed custom parsing logic to compute ATS scores and eliminate LLM data hallucinations, increasing data extraction accuracy by 15%.\n• Architected a Tiered Appointment Booking Flow by developing a stateful, multi-step scheduling sequence. Integrated frontend timezone handling with real-time backend slot validation, reducing booking conflicts by 20%.\n• Built and Streamlined Dynamic UI Interfaces utilizing React Hook Form, Tailwind CSS, and Radix UI. Resolved deep TypeScript bottlenecks and eliminated data inconsistencies, improving form submission reliability across 5+ complex data-entry workflows.\n• Implemented an automated weekly database and code repository backup system utilizing GitHub Actions, ensuring data integrity and streamlining CI/CD pipelines.",
+    tags: ["aariyatech", "intern", "internship", "work", "experience", "job", "cv", "ats", "booking", "remote", "github actions"],
   },
 
   // ── Projects ─────────────────────────────────────────
