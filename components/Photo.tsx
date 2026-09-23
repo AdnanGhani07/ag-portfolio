@@ -20,7 +20,7 @@ const Photo = () => {
             opacity: 1,
             transition: { delay: 0.4, duration: 0.8, ease: "easeInOut" },
           }}
-          className="w-[298px] h-[298px] xl:w-[498px] xl:h-[498px] mix-blend-lighten absolute inset-0 m-auto"
+          className="w-[298px] h-[298px] xl:w-[498px] xl:h-[498px] absolute inset-0 m-auto"
         >
             <div className="relative w-full h-full">
               <Image
